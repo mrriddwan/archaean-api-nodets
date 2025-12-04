@@ -1,13 +1,13 @@
 import { IApiResponse } from "../../shared";
 import { AuthService } from "./auth.service";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 export class AuthController {
   private authService: AuthService;
   constructor() {
     this.authService = new AuthService();
   }
-  async register(req: Request, res: Response, next: Function) {
+  async register(req: Request, res: Response, next: NextFunction) {
     try {
       await this.authService.register(req.body);
       const response: IApiResponse = {
@@ -20,7 +20,7 @@ export class AuthController {
     }
   }
 
-  async login(req: Request, res: Response, next: Function) {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.authService.login(req.body);
       const response: IApiResponse = {

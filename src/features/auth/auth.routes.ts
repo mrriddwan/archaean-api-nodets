@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { AuthController } from ".";
+import { validateRequest } from "@/middleware/validation.middleware";
+import { createUpdateUserSchema } from "../user";
+import { loginSchema } from "./auth.schema";
 
 const router = Router();
-const controller = new AuthController();
+const { register, login } = new AuthController();
 
-router.post("/register", controller.register);
-router.post("/login", controller.login);
+router.post("/register", validateRequest(createUpdateUserSchema), register);
+router.post("/login", validateRequest(loginSchema), login);
 
 export const authRoutes = router;
-
-
