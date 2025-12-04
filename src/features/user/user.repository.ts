@@ -33,4 +33,11 @@ export class UserRepository {
     });
     return deletedUser;
   }
+
+  async findByEmail(email: string) {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+    return user;
+  }
 }
