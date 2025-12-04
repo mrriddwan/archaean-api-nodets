@@ -2,9 +2,9 @@ import { Router } from "express";
 import { UserController } from "./user.controller";
 
 const router = Router();
-const controller = new UserController()
+const { getAllUsers, getUserById } = new UserController();
 
-router.get("/", controller.getAllUsers);
-router.get("/:id", controller.getUserById);
+router.get("/", getAllUsers);
+router.get("/:id", getUserById);
 
 export const userRoutes = router;
