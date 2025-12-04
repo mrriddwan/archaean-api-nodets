@@ -1,13 +1,36 @@
-import { UserService } from "../user/user.service";
-
+import { IApiResponse } from "../../shared";
+import { AuthService } from "./auth.service";
+import { Request, Response } from "express";
 
 export class AuthController {
-   
-  constructor(private userService: UserService) {}
+  private authService: AuthService;
+  constructor() {
+    this.authService = new AuthService();
+  }
+  async register(req: Request, res: Response, next: Function) {
+    try {
+      await this.authService.register(req.body);
+      const response: IApiResponse = {
+        message: "User registered successfully",
+        success: true,
+      };
+      res.status(201).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
 
- async register(req: Request, res: Response) {
-    // const { email, password } = req.body;
-    // const user = await this.userService.create({ email, password });
-    // res.status(201).json(user);
+  async login(req: Request, res: Response, next: Function) {
+    try {
+      const user = await this.authService.login(req.body);
+      const response: IApiResponse = {
+        message: "Login successful",
+        success: true,
+        data: user,
+      };
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
   }
 }
