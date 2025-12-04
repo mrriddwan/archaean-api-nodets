@@ -1,16 +1,15 @@
 model Order {
- id        String   @id @default(uuid())
- userId    String   @map("user_id")
- productId String   @map("product_id")
- quantity  Int
- total     Float
- createdAt DateTime @default(now()) @map("created_at")
- updatedAt DateTime @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  quantity  Int
+  total     Float
+  createdAt DateTime @default(now()) @map("created_at")
+  productId String   @map("product_id")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    String   @map("user_id")
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
- user    User    @relation(fields: [userId], references: [id])
- product Product @relation(fields: [productId], references: [id])
-
- @@index([userId])
- @@index([productId])
- @@map("orders")
+  @@index([userId])
+  @@index([productId])
+  @@map("orders")
 }
