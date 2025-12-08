@@ -1,13 +1,16 @@
 model User {
-  id           String        @id @default(uuid())
-  email        String        @unique
-  name         String?
-  password     String?
-  created_at   DateTime      @default(now())
-  google_id    String?       @unique
-  updated_at   DateTime?     @updatedAt
-  accessTokens AccessToken[]
+  id         String    @id @default(ulid())
+  email      String    @unique
+  name       String?
+  password   String?
+  created_at DateTime  @default(now())
+  google_id  String?   @unique
+  updated_at DateTime? @updatedAt
+
+  //relation
+  accessTokens Token[]
   orders       Order[]
+  userOnRoles  UserOnRoles[]
 
   @@map("users")
 }

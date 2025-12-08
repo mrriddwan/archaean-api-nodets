@@ -1,0 +1,16 @@
+model Token {
+  id          String    @id @default(ulid())
+  token       String    @unique
+  type        String
+  permissions String[]
+  userId      String    @map("user_id")
+  roleId      String    @map("role_id")
+  expiresAt   DateTime  @map("expires_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("update_at")
+  role        Role      @relation(fields: [roleId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("access_tokens")
+}
