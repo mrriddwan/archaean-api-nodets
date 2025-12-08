@@ -100,6 +100,7 @@ export class AuthService {
     return {
       token,
       expiresAt: new Date(Date.now() + 1000 * 60 * 60),
+      userId: user.id
     };
   }
 }
