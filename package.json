@@ -8,7 +8,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "prisma migrate dev",
     "seed": "npx prisma db seed",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -31,6 +35,10 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.1",
     "@types/pg": "^8.15.6",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.7.4",
     "prisma": "^7.0.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

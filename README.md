@@ -353,7 +353,7 @@ This project is a comprehensive learning journey through modern backend developm
 - **User** - User account information with relationships
 - **Product** - Product catalog with pricing
 - **Order** - Order records linking users and products
-- **AccessToken** - Token management for sessions
+- **Token** - Token management for sessions
 
 ### API Structure
 - RESTful routing with API versioning
