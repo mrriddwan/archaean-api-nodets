@@ -22,4 +22,6 @@ export interface IResponseMeta {
 export interface IApiSuccessResponse<T> extends IApiResponse<T> {
   success: true;
   data: T;
+  message?: string;
+  errorCode?: string;
 }

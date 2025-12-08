@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import { routes } from "./routes";
+import { errorHandler } from "./middleware/error.middlesware";
 
 export const createApp = (): Application => {
   const app = express();
@@ -22,7 +23,7 @@ export const createApp = (): Application => {
 
   // Error handling
   // app.use(notFoundHandler);
-  // app.use(errorHandler);
+  app.use(errorHandler);
 
   return app;
 };
