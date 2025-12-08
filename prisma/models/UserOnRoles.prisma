@@ -1,0 +1,11 @@
+model UserOnRoles {
+ userId String @map("user_id")
+ roleId String @map("role_id")
+
+ //relation
+ user User @relation(fields: [userId], references: [id])
+ role Role @relation(fields: [roleId], references: [id])
+
+ @@id([userId, roleId])
+ @@map("user_roles")
+}

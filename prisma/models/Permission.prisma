@@ -1,0 +1,9 @@
+model Permission {
+  id        String    @id @default(ulid())
+  name      String    @unique
+  code      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("update_at")
+
+  @@map("permissions")
+}
