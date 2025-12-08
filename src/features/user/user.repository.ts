@@ -53,12 +53,8 @@ export class UserRepository {
   async findByEmail(email: string) {
     const user = await prisma.user.findUnique({
       where: { email },
-      select:{
-        id: true,
-        email: true,
-        google_id: true,
-        created_at: true,
-        updated_at: true
+      include: {
+        role: true
       }
     });
     return user;

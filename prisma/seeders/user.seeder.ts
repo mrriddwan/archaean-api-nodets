@@ -1,7 +1,7 @@
 import argon2 from "argon2";
 import { prisma } from "../../src/lib/prisma";
 
-async function seedUsers() {
+export async function seedUsers() {
   const users = [
     {
       email: "user1@example.com",
@@ -14,6 +14,8 @@ async function seedUsers() {
       name: "User Two",
     },
   ];
+
+  await prisma.user.deleteMany();
 
   await Promise.all(
     users.map(async (user) => {
@@ -28,5 +30,3 @@ async function seedUsers() {
   console.log({ users });
   console.log("User seeding completed.");
 }
-
-export default seedUsers;

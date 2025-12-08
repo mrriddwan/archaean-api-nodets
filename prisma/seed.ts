@@ -1,8 +1,9 @@
 import { prisma } from "../src/lib/prisma";
-import seedUsers from "./seeders/user.seeder";
+import { seedRoles, seedUsers } from "./seeders";
 
 async function main() {
   await seedUsers();
+  await seedRoles();
 }
 
 main()
