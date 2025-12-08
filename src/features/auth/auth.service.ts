@@ -20,7 +20,20 @@ export class AuthService {
 
     const user = await this.userService.findByEmail(email);
 
-    if (user && (await argon2.verify(user.password as string, password))) {
+    if (!user) {
+      throw new AppError(
+        ErrorCode.NOT_FOUND,
+        "User not found",
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    const passwordIsValid = await argon2.verify(
+      user.password as string,
+      password
+    );
+
+    if (user && passwordIsValid) {
       //create access token for user
       const tokenData = this.initializeToken(user);
       return tokenData;
@@ -29,7 +42,7 @@ export class AuthService {
     throw new AppError(
       ErrorCode.NOT_FOUND,
       "Invalid credentials",
-      StatusCodes.NOT_FOUND
+      StatusCodes.UNAUTHORIZED
     );
   }
 

@@ -3,7 +3,9 @@ import { seedRoles, seedUsers } from "./seeders";
 
 async function main() {
   await seedUsers();
+  console.log("Users seeded");
   await seedRoles();
+  console.log("Roles seeded");
 }
 
 main()

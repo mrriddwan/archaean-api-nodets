@@ -26,7 +26,4 @@ export async function seedUsers() {
       });
     }
   ));
-
-  console.log({ users });
-  console.log("User seeding completed.");
 }

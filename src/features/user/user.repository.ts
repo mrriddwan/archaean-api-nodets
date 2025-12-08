@@ -54,7 +54,7 @@ export class UserRepository {
     const user = await prisma.user.findUnique({
       where: { email },
       include: {
-        role: true
+        userOnRoles: true
       }
     });
     return user;
