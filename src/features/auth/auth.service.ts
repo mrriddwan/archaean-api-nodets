@@ -2,22 +2,28 @@ import { StatusCodes } from "http-status-codes";
 import { AppError, ErrorCode } from "../../shared/error.types";
 import { UserService } from "../user";
 import argon2 from "argon2";
+import jwt from "jsonwebtoken";
+import { User } from "generated/prisma/client";
+import { TokenService } from "../token/token.service";
 
 export class AuthService {
-
   private userService: UserService;
+  private tokenService: TokenService;
 
   constructor() {
     this.userService = new UserService();
+    this.tokenService = new TokenService();
   }
 
-  async login(body: { email: string; password: string }) {
+  async login(body: { email: string; password: string }): Promise<any> {
     const { email, password } = body;
 
     const user = await this.userService.findByEmail(email);
 
     if (user && (await argon2.verify(user.password as string, password))) {
-      return user;
+      //create access token for user
+      const tokenData = this.initializeToken(user);
+      return tokenData;
     }
 
     throw new AppError(
@@ -27,7 +33,11 @@ export class AuthService {
     );
   }
 
-  async register(body: { email: string; password: string; name: string }) {
+  async register(body: {
+    email: string;
+    password: string;
+    name: string;
+  }): Promise<void> {
     const { email, password, name } = body;
 
     const existingUser = await this.userService.findByEmail(email);
@@ -40,11 +50,43 @@ export class AuthService {
     }
 
     const hashedPassword = await argon2.hash(password);
-    
+
     await this.userService.createUser({
       email,
       password: hashedPassword,
       name,
     });
+  }
+
+  async initializeToken(user: User): Promise<any> {
+    const secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+      throw new AppError(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "JWT secret not configured",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        role: "user", //TODO: since many to many, need to be pass by FE
+      },
+      secret,
+      { expiresIn: "1h" }
+    );
+
+    await this.tokenService.storeToken({
+      token,
+      userId: user.id,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60),
+    });
+
+    return {
+      token,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60),
+    };
   }
 }

@@ -7,7 +7,7 @@ export class AuthController {
   constructor() {
     this.authService = new AuthService();
   }
-  async register(req: Request, res: Response, next: NextFunction) {
+  register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await this.authService.register(req.body);
       const response: IApiResponse = {
@@ -18,19 +18,19 @@ export class AuthController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  async login(req: Request, res: Response, next: NextFunction) {
+  login = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = await this.authService.login(req.body);
+      const { token, expiresAt } = await this.authService.login(req.body);
       const response: IApiResponse = {
         message: "Login successful",
         success: true,
-        data: user,
+        data: { token: token, expires_at: expiresAt },
       };
       res.status(200).json(response);
     } catch (error) {
       next(error);
     }
-  }
+  };
 }
