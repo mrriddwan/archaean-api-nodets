@@ -12,14 +12,17 @@
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\""
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "reset": "rm -rf prisma/migrations && prisma migrate reset && prisma migrate dev --name init",
+    "reset:seed": "rm -rf prisma/migrations && prisma migrate reset && prisma migrate dev --name init && pnpm seed"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mrriddwan/archaean-api-nodets.git"
   },
   "prisma": {
-    "schema": "./prisma"
+    "schema": "./prisma",
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",

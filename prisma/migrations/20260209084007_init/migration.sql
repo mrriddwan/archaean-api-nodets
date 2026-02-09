@@ -1,4 +1,16 @@
 -- CreateTable
+CREATE TABLE "oauth_accounts" (
+    "id" TEXT NOT NULL,
+    "provider" TEXT NOT NULL,
+    "user_provider_id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "update_at" TIMESTAMP(3),
+
+    CONSTRAINT "oauth_accounts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "orders" (
     "id" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
@@ -67,7 +79,6 @@ CREATE TABLE "users" (
     "name" TEXT,
     "password" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "google_id" TEXT,
     "updated_at" TIMESTAMP(3),
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
@@ -108,8 +119,8 @@ CREATE INDEX "access_tokens_user_id_idx" ON "access_tokens"("user_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
--- CreateIndex
-CREATE UNIQUE INDEX "users_google_id_key" ON "users"("google_id");
+-- AddForeignKey
+ALTER TABLE "oauth_accounts" ADD CONSTRAINT "oauth_accounts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "orders" ADD CONSTRAINT "orders_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
