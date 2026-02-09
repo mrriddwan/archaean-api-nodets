@@ -7,11 +7,17 @@ export class TokenService {
     this.tokenRepository = new TokenRepository();
   }
 
-  async storeToken(data: any) {
+  async storeToken(data: {
+    token: string;
+    userId: string;
+    expiresAt: Date;
+    type?: "access" | "refresh";
+  }) {
     return this.tokenRepository.store(
       data.token,
       data.userId,
-      data.expiresAt
-    )
+      data.expiresAt,
+      data.type || "access"
+    );
   }
 }

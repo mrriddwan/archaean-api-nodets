@@ -3,16 +3,15 @@ import { AppError, ErrorCode } from "@/shared/error.types";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
-import { th } from "zod/v4/locales";
 
 export const authenticate = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw new AppError(
       ErrorCode.UNAUTHORIZED,
       "Token not provided",
@@ -20,11 +19,44 @@ export const authenticate = async (
     );
   }
 
+  const token = authHeader.split(" ")[1];
+
   try {
     const decoded = jwt.verify(
-      token.split(" ")[1],
+      token,
       process.env.JWT_SECRET as string
     ) as any;
+
+    // verify token is an access token
+    if (decoded.type !== "access") {
+      throw new AppError(
+        ErrorCode.UNAUTHORIZED,
+        "Invalid token type",
+        StatusCodes.UNAUTHORIZED
+      );
+    }
+
+    // verify token exists in database
+    const tokenRecord = await prisma.token.findUnique({
+      where: { token },
+    });
+
+    if (!tokenRecord || tokenRecord.type !== "access") {
+      throw new AppError(
+        ErrorCode.UNAUTHORIZED,
+        "Token not found or invalid",
+        StatusCodes.UNAUTHORIZED
+      );
+    }
+
+    // check if token is expired in database
+    if (new Date() > tokenRecord.expiresAt) {
+      throw new AppError(
+        ErrorCode.UNAUTHORIZED,
+        "Token expired",
+        StatusCodes.UNAUTHORIZED
+      );
+    }
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
@@ -38,19 +70,12 @@ export const authenticate = async (
       );
     }
 
-    const tokenExpired = new Date(decoded.expiresAt) < new Date();
-    if (tokenExpired) {
-      throw new AppError(
-        ErrorCode.UNAUTHORIZED,
-        "Token expired",
-        StatusCodes.UNAUTHORIZED
-      );
-    }
-
     req.user = user;
     next();
   } catch (error) {
-    console.log(error);
+    if (error instanceof AppError) {
+      throw error;
+    }
     throw new AppError(
       ErrorCode.UNAUTHORIZED,
       "Invalid token",

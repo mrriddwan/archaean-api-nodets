@@ -22,11 +22,21 @@ export class AuthController {
 
   login = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { token, expiresAt, userId } = await this.authService.login(req.body);
+      const {
+        accessToken,
+        refreshToken,
+        accessTokenExpiresAt,
+        userId,
+      } = await this.authService.login(req.body);
       const response: IApiResponse = {
         message: "Login successful",
         success: true,
-        data: { token: token, expires_at: expiresAt, user_id: userId },
+        data: {
+          access_token: accessToken,
+          refresh_token: refreshToken,
+          expires_at: accessTokenExpiresAt,
+          user_id: userId,
+        },
       };
       res.status(200).json(response);
     } catch (error) {
