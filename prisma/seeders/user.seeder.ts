@@ -15,6 +15,12 @@ export async function seedUsers() {
     },
   ];
 
+  const userRole = await prisma.role.findUnique({ where: { name: "User" } });
+  
+  if (!userRole) {
+    throw new Error("User role not found");
+  }
+
   await prisma.user.deleteMany();
 
   await Promise.all(
@@ -22,7 +28,14 @@ export async function seedUsers() {
       await prisma.user.upsert({
         where: { email: user.email },
         update: {},
-        create: user,
+        create: {
+          ...user,
+          userOnRoles: {
+            create: {
+              roleId: userRole.id,
+            },
+          },
+        },
       });
     }
   ));
