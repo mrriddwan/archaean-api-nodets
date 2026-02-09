@@ -1,8 +1,10 @@
 import express, { Application } from "express";
 import helmet from "helmet";
 import cors from "cors";
+import passport from "passport";
 import { routes } from "./routes";
 import { errorHandler } from "./middleware/error.middlesware";
+import "./lib/passport";
 
 export const createApp = (): Application => {
   const app = express();
@@ -13,6 +15,9 @@ export const createApp = (): Application => {
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Passport
+  app.use(passport.initialize());
 
   // Health check
   app.get("/health", (req, res) => {

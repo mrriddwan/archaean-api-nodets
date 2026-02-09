@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 export class TokenRepository {
-  async store(token: string, userId: string, expiresAt: Date) {
+  async store(token: string, userId: string, expiresAt: Date, type: 'access' | 'refresh' = 'access') {
     const userRole = await prisma.role.findUnique({ where: { name: "User" } });
 
     return await prisma.token.create({
@@ -10,7 +10,7 @@ export class TokenRepository {
         userId,
         roleId: userRole?.id as string,
         permissions: ["*"],
-        type: "API",
+        type,
         expiresAt,
       },
     });
