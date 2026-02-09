@@ -1,3 +1,4 @@
+import { User } from "generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { CreateUpdateUserDto } from "./user.schema";
 export class UserRepository {
@@ -6,7 +7,6 @@ export class UserRepository {
       select:{
         id: true,
         email: true,
-        google_id: true,
         created_at: true,
         updated_at: true
       }
@@ -14,15 +14,11 @@ export class UserRepository {
     return users;
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<Pick<User, "id" | "email" | "name" | "created_at" | "updated_at"> | null> {
     const user = await prisma.user.findUnique({
       where: { id },
-      select:{
-        id: true,
-        email: true,
-        google_id: true,
-        created_at: true,
-        updated_at: true
+      omit: {
+        password: true,
       }
     });
     return user;
@@ -51,6 +47,19 @@ export class UserRepository {
   }
 
   async findByEmail(email: string) {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: {
+        userOnRoles: true
+      },
+      omit: {
+        password: true,
+      }
+    });
+    return user;
+  }
+
+  async findByEmailWithPassword(email: string) {
     const user = await prisma.user.findUnique({
       where: { email },
       include: {

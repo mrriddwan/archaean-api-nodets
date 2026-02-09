@@ -27,7 +27,7 @@ export class AuthService {
   async login(body: { email: string; password: string }): Promise<any> {
     const { email, password } = body;
 
-    const user = await this.userService.findByEmail(email);
+    const user = await this.userService.findByEmailWithPassword(email);
 
     if (!user) {
       throw new AppError(
@@ -79,7 +79,7 @@ export class AuthService {
     });
   }
 
-  async initializeToken(user: User): Promise<any> {
+  async initializeToken(user: Pick<User, "id">): Promise<any> {
     const secret = process.env.JWT_SECRET;
 
     if (!secret) {
