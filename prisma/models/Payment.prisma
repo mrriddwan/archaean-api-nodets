@@ -1,0 +1,9 @@
+model Payment {
+  id        String    @id @default(uuid())
+  amount    Float
+  status    String
+  orderId   String    @map("order_id")
+  order     Order     @relation(fields: [orderId], references: [id])
+
+  @@map("payments")
+}

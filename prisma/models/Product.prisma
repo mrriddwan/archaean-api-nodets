@@ -5,7 +5,9 @@ model Product {
   price       Float
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  orders      Order[]
+  shopId      String   @map("shop_id")
+  shop        Shop     @relation(fields: [shopId], references: [id])
+  orders      ProductOnOrders[]
 
   @@map("products")
 }

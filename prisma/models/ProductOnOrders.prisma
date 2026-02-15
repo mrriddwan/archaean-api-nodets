@@ -1,0 +1,11 @@
+model ProductOnOrders {
+ productId String @map("product_id")
+ orderId String @map("order_id")
+
+ //relation
+ product Product @relation(fields: [productId], references: [id])
+ order Order @relation(fields: [orderId], references: [id])
+
+ @@id([productId, orderId])
+ @@map("product_orders")
+}

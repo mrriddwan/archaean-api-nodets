@@ -11,6 +11,7 @@ model User {
   orders        Order[]
   userOnRoles   UserOnRoles[]
   oAuthAccounts OAuthAccount[]
+  shop          Shop?
 
   @@map("users")
 }
