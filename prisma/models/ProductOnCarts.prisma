@@ -1,0 +1,11 @@
+model ProductOnCarts {
+ productId String @map("product_id")
+ cartId    String @map("cart_id")
+
+ //relation
+ product Product @relation(fields: [productId], references: [id])
+ cart    Cart    @relation(fields: [cartId], references: [id])
+
+ @@id([productId, cartId])
+ @@map("product_carts")
+}

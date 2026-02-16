@@ -8,6 +8,7 @@ model Product {
   shopId      String   @map("shop_id")
   shop        Shop     @relation(fields: [shopId], references: [id])
   orders      ProductOnOrders[]
+  productOnCarts ProductOnCarts[]
 
   @@map("products")
 }

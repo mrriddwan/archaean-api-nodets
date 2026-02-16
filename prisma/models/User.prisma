@@ -12,6 +12,7 @@ model User {
   userOnRoles   UserOnRoles[]
   oAuthAccounts OAuthAccount[]
   shop          Shop?
-
+  cart          Cart?
+  
   @@map("users")
 }

@@ -1,4 +1,14 @@
 -- CreateTable
+CREATE TABLE "carts" (
+    "id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+    "user_id" TEXT NOT NULL,
+
+    CONSTRAINT "carts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "oauth_accounts" (
     "id" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
@@ -51,10 +61,18 @@ CREATE TABLE "products" (
     "description" TEXT,
     "price" DOUBLE PRECISION NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3),
     "shop_id" TEXT NOT NULL,
 
     CONSTRAINT "products_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "product_carts" (
+    "product_id" TEXT NOT NULL,
+    "cart_id" TEXT NOT NULL,
+
+    CONSTRAINT "product_carts_pkey" PRIMARY KEY ("product_id","cart_id")
 );
 
 -- CreateTable
@@ -124,6 +142,9 @@ CREATE TABLE "user_roles" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "carts_user_id_key" ON "carts"("user_id");
+
+-- CreateIndex
 CREATE INDEX "orders_user_id_idx" ON "orders"("user_id");
 
 -- CreateIndex
@@ -154,6 +175,9 @@ CREATE INDEX "access_tokens_user_id_idx" ON "access_tokens"("user_id");
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- AddForeignKey
+ALTER TABLE "carts" ADD CONSTRAINT "carts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "oauth_accounts" ADD CONSTRAINT "oauth_accounts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -164,6 +188,12 @@ ALTER TABLE "payments" ADD CONSTRAINT "payments_order_id_fkey" FOREIGN KEY ("ord
 
 -- AddForeignKey
 ALTER TABLE "products" ADD CONSTRAINT "products_shop_id_fkey" FOREIGN KEY ("shop_id") REFERENCES "shops"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "product_carts" ADD CONSTRAINT "product_carts_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "product_carts" ADD CONSTRAINT "product_carts_cart_id_fkey" FOREIGN KEY ("cart_id") REFERENCES "carts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "product_orders" ADD CONSTRAINT "product_orders_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
