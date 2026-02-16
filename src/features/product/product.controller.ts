@@ -44,4 +44,34 @@ export class ProductController {
    next(error);
   }
  }
+
+ async updateProduct(req: Request, res: Response, next: NextFunction) {
+  try {
+   const { id } = req.params;
+   const { name, description, price, shopId } = req.body;
+   const product = await this.productService.updateProduct(id as string, {
+     name,
+     description,
+     price,
+     shop: {
+       connect: {
+         id: shopId,
+       },
+     },
+   });
+   res.json(product);
+  } catch (error) {
+   next(error);
+  }
+ }
+
+ async deleteProduct(req: Request, res: Response, next: NextFunction) {
+  try {
+   const { id } = req.params;
+   const product = await this.productService.deleteProduct(id as string);
+   res.json(product);
+  } catch (error) {
+   next(error);
+  }
+ }
 }
