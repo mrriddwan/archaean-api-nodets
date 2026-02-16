@@ -25,7 +25,7 @@ export class UserController {
   getUserById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const user = await this.userService.getUserById(id);
+      const user = await this.userService.getUserById(id as string);
       const response: IApiResponse = {
         success: true,
         data: user,
