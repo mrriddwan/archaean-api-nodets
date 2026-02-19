@@ -143,3 +143,6 @@ vite.config.ts.timestamp-*
 
 # Cursor IDE
 .cursor
+
+# macOS system files
+.DS_Store
