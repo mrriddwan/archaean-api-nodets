@@ -12,11 +12,14 @@ export class ProductController {
       const products = await this.productService.getAllProducts();
 
       // temporary image url attach
-      const randomImageId = Math.floor(Math.random() * 1000);
-      const productsWithImageUrl = products.map((product) => ({
-        ...product,
-        imageUrl: `https://picsum.photos/id/${randomImageId}/200/300`,
-      }));
+      const productsWithImageUrl = products.map((product) => {
+        const randomImageId = Math.floor(Math.random() * 1000);
+        return {
+          ...product,
+          imageUrl: `https://picsum.photos/id/${randomImageId}/200/300`,
+        }
+
+      });
       res.json(productsWithImageUrl);
     } catch (error) {
       next(error);
