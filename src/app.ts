@@ -4,6 +4,7 @@ import cors from "cors";
 import passport from "passport";
 import { routes } from "./routes";
 import { errorHandler } from "./middleware/error.middlesware";
+import { responseTransformMiddleware } from "./middleware/response-transform.middleware";
 import "./lib/passport";
 
 export const createApp = (): Application => {
@@ -15,6 +16,9 @@ export const createApp = (): Application => {
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Response transformation middleware (convert all JSON responses to snake_case)
+  app.use(responseTransformMiddleware);
 
   // Passport
   app.use(passport.initialize());
