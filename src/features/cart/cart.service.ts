@@ -19,4 +19,8 @@ export class CartService {
  async deleteCart(id: string) {
   return this.cartRepository.delete(id);
  }
+
+ async addProductToCart(userId: string, productId: string) {
+  return this.cartRepository.addProductToCart(userId, productId);
+ }
 }

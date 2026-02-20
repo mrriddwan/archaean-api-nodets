@@ -25,4 +25,9 @@ export class CartRepository {
     const cart = await prisma.cart.delete({ where: { id } });
     return cart;
   }
+
+  async addProductToCart(userId: string, productId: string) {
+    const cart = await prisma.cart.update({ where: { userId }, data: { products: { create: { productId } } } });
+    return cart;
+  }
 }

@@ -6,8 +6,9 @@ const router = Router();
 
 router.use(authenticate);
 
-const { getCartByUserId } = new CartController()
+const { getCartByUserId, addProductToCart } = new CartController();
 
 router.get('/user/cart', authenticate, getCartByUserId)
+router.post('/user/cart/add-product', authenticate, addProductToCart)
 
 export const cartRoutes = router;
