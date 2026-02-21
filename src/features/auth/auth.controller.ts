@@ -51,11 +51,9 @@ export class AuthController {
 
       const code = await this.authService.generateOAuthCode(user.id);
 
-      res.json({
-        success: true,
-        code,
-        expires_in: 300,
-      });
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+      res.redirect(`${frontendUrl}/auth/callback?code=${code}&expires_in=300`);
+
     } catch (error) {
       next(error);
     }
@@ -64,11 +62,9 @@ export class AuthController {
   googleError = async (req: Request, res: Response, next: NextFunction) => {
     const error = req.query.error as string;
     console.error("[OAuth] Authentication failed:", error || "Unknown error");
-    res.status(401).json({
-      success: false,
-      error: error || "Authentication failed",
-      message: "Google OAuth authentication failed",
-    });
+
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    res.redirect(`${frontendUrl}/auth/error?error=${encodeURIComponent(error || "Authentication failed")}`);
   };
 
   googleTokens = async (req: Request, res: Response, next: NextFunction) => {
@@ -83,14 +79,19 @@ export class AuthController {
       }
 
       const tokenData = await this.authService.exchangeOAuthCode(code);
-
-      res.json({
+      
+      const response: IApiResponse = {
+        message: "Login successful",
         success: true,
-        access_token: tokenData.accessToken,
-        refresh_token: tokenData.refreshToken,
-        expires_in: tokenData.expiresIn,
-        user_id: tokenData.userId,
-      });
+        data: {
+          access_token: tokenData.accessToken,
+          refresh_token: tokenData.refreshToken,
+          expires_at: tokenData.expiresIn,
+          user_id: tokenData.userId,
+        },
+      };
+      res.status(200).json(response);
+
     } catch (error) {
       next(error);
     }
