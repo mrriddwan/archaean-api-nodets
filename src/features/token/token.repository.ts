@@ -17,4 +17,8 @@ export class TokenRepository {
       create: { token, ...data },
     });
   }
+
+  async delete(userId: string) {
+    return await prisma.token.deleteMany({ where: { userId } });
+  }
 }

@@ -4,10 +4,11 @@ import { validateRequest } from "@/middleware/validation.middleware";
 import { createUpdateUserSchema } from "../user";
 import { loginSchema } from "./auth.schema";
 import passport from "passport";
+import { authenticate } from "@/middleware/auth.middleware";
 
 const router = Router();
 const authController = new AuthController();
-const { register, login, googleCallback, googleError, googleTokens, refresh } = authController;
+const { register, login, googleCallback, googleError, googleTokens } = authController;
 
 // internal
 router.post("/register", validateRequest(createUpdateUserSchema), register);
@@ -41,6 +42,8 @@ router.get("/google/error", googleError);
 router.post("/google/tokens", googleTokens);
 
 // Refresh token endpoint
-router.post("/refresh", refresh);
+router.use(authenticate).post("/refresh", authController.refresh.bind(authController));
+router.use(authenticate).post("/logout", authController.logout.bind(authController));
+router.use(authenticate).get("/me", authController.getMe.bind(authController));
 
 export const authRoutes = router;

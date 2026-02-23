@@ -1,11 +1,15 @@
+import { User } from "generated/prisma/client";
 import { IApiResponse } from "../../shared";
 import { AuthService } from "./auth.service";
 import { NextFunction, Request, Response } from "express";
+import { TokenService } from "../token/token.service";
 
 export class AuthController {
   private authService: AuthService;
+  private tokenService: TokenService;
   constructor() {
     this.authService = new AuthService();
+    this.tokenService = new TokenService();
   }
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -79,7 +83,7 @@ export class AuthController {
       }
 
       const tokenData = await this.authService.exchangeOAuthCode(code);
-      
+
       const response: IApiResponse = {
         message: "Login successful",
         success: true,
@@ -116,6 +120,33 @@ export class AuthController {
         expires_in: tokenData.expiresIn,
         user_id: tokenData.userId,
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  logout = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user as User;
+      await this.tokenService.deleteToken(user.id);
+      const response: IApiResponse = {
+        success: true,
+        message: "Logout successful",
+      };
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getMe = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user as User;
+      const response: IApiResponse = {
+        success: true,
+        data: user,
+      };
+      res.json(response);
     } catch (error) {
       next(error);
     }

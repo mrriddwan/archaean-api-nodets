@@ -20,4 +20,8 @@ export class TokenService {
       data.type || "access"
     );
   }
+
+  async deleteToken(userId: string) {
+    return this.tokenRepository.delete(userId);
+  }
 }
