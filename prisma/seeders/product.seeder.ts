@@ -1,7 +1,7 @@
-import { prisma } from "../../src/lib/prisma";
+import { PrismaClient } from "generated/prisma/client"
 import { productFactory } from "../factories";
 
-export async function seedProducts(productsPerShop: number = 5) {
+export async function seedProducts(prisma: PrismaClient, productsPerShop: number = 5) {
   await prisma.product.deleteMany({});
 
   // Get all existing shops

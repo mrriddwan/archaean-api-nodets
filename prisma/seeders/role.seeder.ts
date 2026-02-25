@@ -1,6 +1,6 @@
-import { prisma } from "../../src/lib/prisma";
+import { PrismaClient } from "../../generated/prisma/client"
 
-export async function seedRoles() {
+export async function seedRoles(prisma: PrismaClient) {
  
  const roles = [
   { name: "User", code: "USER" },

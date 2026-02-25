@@ -1,8 +1,8 @@
-import { prisma } from "../../src/lib/prisma";
+import { PrismaClient } from "generated/prisma/client"
 import { shopFactory } from "../factories";
 import { userFactory } from "../factories";
 
-export async function seedShops(count: number = 5) {
+export async function seedShops(prisma: PrismaClient, count: number = 5) {
   await prisma.shop.deleteMany();
 
   // Get existing users or create new ones for shops

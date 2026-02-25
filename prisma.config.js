@@ -4,7 +4,7 @@ module.exports = {
   schema: 'prisma',
   migrations: {
     path: 'prisma/migrations',
-    seed: 'node prisma/seed.js',
+    seed: 'node dist/prisma/seed.js',
   },
   datasource: {
     url: process.env.DATABASE_URL,

@@ -1,7 +1,7 @@
-import { prisma } from "../../src/lib/prisma";
+import { PrismaClient } from "generated/prisma/client"
 import { userFactory } from "../factories";
 
-export async function seedUsers(count: number = 10) {
+export async function seedUsers(prisma: PrismaClient, count: number = 10) {
   const userRole = await prisma.role.findUnique({ where: { name: "User" } });
   
   if (!userRole) {

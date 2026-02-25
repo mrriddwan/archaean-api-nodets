@@ -1,7 +1,7 @@
 // prisma/seed.js
 
-const { PrismaClient } = require('@prisma/client');
-const { seedRoles }    = require('./seeders');  // or './seeders/roles' if separate files
+const { PrismaClient } = require('../generated/prisma/client')
+const { seedRoles }    = require('./seeders');
 const { seedUsers }    = require('./seeders');
 const { seedShops }    = require('./seeders');
 const { seedProducts } = require('./seeders');

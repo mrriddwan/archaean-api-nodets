@@ -17,10 +17,12 @@
       "@/config": ["src/config"],
       "@/shared": ["src/shared"],
       "@/features/*": ["src/features/*"],
-      "@/database": ["src/database"]
+      "@/database": ["src/database"],
+      "generated/prisma/client": ["./generated/prisma/client.ts"],
+      "generated/prisma/*": ["./generated/prisma/*"]
     },
     "ignoreDeprecations": "5.0"
   },
-  "include": ["src/**/*", "generated/**/*"],
+  "include": ["src/**/*", "generated/**/*", "prisma/**/*"],
   "exclude": ["node_modules", "dist"]
 }
