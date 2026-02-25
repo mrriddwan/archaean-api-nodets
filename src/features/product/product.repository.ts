@@ -12,6 +12,7 @@ export class ProductRepository {
     price: true,
     createdAt: true,
     updatedAt: true,
+    shopId: true,
     shop: {
       select: {
         id: true,

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ProductService } from "./product.service";
+import { Prisma } from "generated/prisma/client";
 
 export class ProductController {
   private productService: ProductService;
@@ -12,7 +13,7 @@ export class ProductController {
       const products = await this.productService.getAllProducts();
 
       // temporary image url attach
-      const productsWithImageUrl = products.map((product) => {
+      const productsWithImageUrl = products.map((product: Prisma.ProductModel) => {
         const randomImageId = Math.floor(Math.random() * 1000);
         return {
           ...product,
