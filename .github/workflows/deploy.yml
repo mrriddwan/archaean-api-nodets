@@ -42,26 +42,36 @@ jobs:
       - name: Deploy to Droplet
         env:
           IMAGE: ${{ needs.build-and-push.outputs.image }}
+          DO_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
         run: |
           echo "${{ secrets.DROPLET_SSH_KEY }}" > key.pem
           chmod 600 key.pem
+
+          # Write token to temp file, scp it over
+          echo "$DO_TOKEN" > do_token.txt
+
+          scp -o StrictHostKeyChecking=no -i key.pem \
+            do_token.txt \
+            ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:/tmp/do_token.txt
 
           ssh -o StrictHostKeyChecking=no -i key.pem \
             ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} "
               set -e
 
-              echo '${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}' | \
+              cat /tmp/do_token.txt | \
                 docker login registry.digitalocean.com \
-                -u '${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}' --password-stdin
+                -u \$(cat /tmp/do_token.txt) \
+                --password-stdin
+
+              rm -f /tmp/do_token.txt
 
               cd /opt/archaean
 
               docker compose pull backend
               docker compose up -d postgres redis
-              
-              echo 'Waiting for postgres to be healthy...'
+
+              echo 'Waiting for postgres...'
               until docker compose exec -T postgres pg_isready -U postgres; do
-                echo 'Postgres not ready yet, waiting...'
                 sleep 3
               done
 
@@ -69,4 +79,4 @@ jobs:
               docker image prune -f
             "
 
-          rm -f key.pem
+          rm -f key.pem do_token.txt
