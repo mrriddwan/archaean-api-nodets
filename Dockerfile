@@ -7,6 +7,8 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
+
+RUN npx prisma generate
 RUN pnpm run build
 
 # ── Production stage ──────────────────────────────────────
@@ -18,12 +20,12 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile --prod
 
-# Copy compiled JS
-COPY --from=builder /app/dist ./dist
+RUN npx prisma generate
 
-# Copy Prisma schema + generated client
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
+COPY --from=builder /app/generated ./generated
 
 EXPOSE 4000
 CMD ["node", "dist/index.js"]
