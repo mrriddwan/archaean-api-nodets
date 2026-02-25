@@ -23,10 +23,6 @@
     "type": "git",
     "url": "git+https://github.com/mrriddwan/archaean-api-nodets.git"
   },
-  "prisma": {
-    "schema": "./prisma",
-    "seed": "tsx prisma/seed.ts"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -46,7 +42,6 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.7.4",
-    "prisma": "^7.0.1",
     "prisma-factory": "^0.1.13",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
@@ -56,6 +51,7 @@
     "@prisma/adapter-pg": "^7.0.1",
     "@prisma/client": "^7.1.0",
     "@types/passport-google-oauth20": "^2.0.17",
+    "prisma": "^7.0.1",
     "argon2": "^0.44.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
