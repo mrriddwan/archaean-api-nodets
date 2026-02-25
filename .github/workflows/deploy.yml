@@ -1,0 +1,72 @@
+name: Deploy Backend to DigitalOcean
+
+on:
+  push:
+    branches: [deploy/prod]
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: archaean-backend
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to DigitalOcean Container Registry
+        run: |
+          echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | \
+            docker login registry.digitalocean.com \
+            -u "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" --password-stdin
+
+      - name: Build and push Docker image
+        id: build
+        env:
+          REGISTRY: registry.digitalocean.com
+          REGISTRY_NAME: ${{ vars.REGISTRY_NAME }}
+        run: |
+          IMAGE="$REGISTRY/$REGISTRY_NAME/${{ env.IMAGE_NAME }}:latest"
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Droplet
+        env:
+          IMAGE: ${{ needs.build-and-push.outputs.image }}
+        run: |
+          echo "${{ secrets.DROPLET_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+
+          ssh -o StrictHostKeyChecking=no -i key.pem \
+            ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} "
+              set -e
+
+              echo '${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}' | \
+                docker login registry.digitalocean.com \
+                -u '${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}' --password-stdin
+
+              cd /opt/archaean
+
+              docker compose pull backend
+              docker compose up -d postgres redis
+              
+              echo 'Waiting for postgres to be healthy...'
+              until docker compose exec -T postgres pg_isready -U postgres; do
+                echo 'Postgres not ready yet, waiting...'
+                sleep 3
+              done
+
+              docker compose up -d backend
+              docker image prune -f
+            "
+
+          rm -f key.pem
