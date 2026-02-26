@@ -19,6 +19,13 @@
     "reset:seed": "rm -rf prisma/migrations && prisma migrate reset && prisma migrate dev --name init && pnpm seed",
     "reset:seed-prod": "rm -rf prisma/migrations && prisma migrate reset && prisma migrate deploy --name init && pnpm seed"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/engines",
+      "argon2",
+      "prisma"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mrriddwan/archaean-api-nodets.git"
