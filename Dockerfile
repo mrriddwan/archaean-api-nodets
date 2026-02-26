@@ -8,8 +8,6 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-# Prisma 7 env() requires DATABASE_URL at generate time
-# Dummy value is safe — generate only reads schema, never connects to DB
 RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" \
     npx prisma generate
 
@@ -26,8 +24,10 @@ RUN pnpm install --frozen-lockfile --prod
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/generated ./generated
 COPY prisma.config.js ./prisma.config.js
+
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" \
+    npx prisma generate
 
 EXPOSE 4000
 CMD ["node", "dist/src/server.js"]
