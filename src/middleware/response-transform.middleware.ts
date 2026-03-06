@@ -2,21 +2,57 @@ import { Request, Response, NextFunction } from "express";
 import { toSnakeCase } from "@/shared/transform.util";
 
 /**
- * Middleware that intercepts all JSON responses and converts them to snake_case
+ * Normalizes JSON body to IApiResponse shape.
+ * - 2xx + raw data → { success: true, data }
+ * - 4xx/5xx + object with message but no success → { success: false, message, code }
+ * Then converts keys to snake_case.
+ */
+function normalizeToApiResponse(res: Response, body: any): any {
+  const status = res.statusCode;
+  const isSuccess = status >= 200 && status < 300;
+  const alreadyShaped =
+    body != null &&
+    typeof body === "object" &&
+    "success" in body;
+
+  if (alreadyShaped) return body;
+
+  if (isSuccess) {
+    return { success: true, data: body };
+  }
+
+  if (
+    status >= 400 &&
+    body != null &&
+    typeof body === "object" &&
+    "message" in body
+  ) {
+    return {
+      success: false,
+      message: body.message,
+      code: body.code ?? "ERROR",
+    };
+  }
+
+  return body;
+}
+
+/**
+ * Middleware that:
+ * 1. Wraps successful (2xx) JSON responses in IApiResponse format when not already shaped.
+ * 2. Converts all JSON response keys to snake_case.
  */
 export const responseTransformMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  // Store the original json method
   const originalJson = res.json.bind(res);
 
-  // Override the json method to transform the response
   res.json = function (body?: any) {
-    // Transform the body to snake_case before sending
-    const transformedBody = body ? toSnakeCase(body) : body;
-    return originalJson(transformedBody);
+    const normalized = normalizeToApiResponse(res, body);
+    const transformed = normalized ? toSnakeCase(normalized) : normalized;
+    return originalJson(transformed);
   };
 
   next();

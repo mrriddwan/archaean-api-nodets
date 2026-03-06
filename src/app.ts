@@ -10,7 +10,6 @@ import { corsOptions } from "./config/cors";
 
 export const createApp = (): Application => {
   const app = express();
-  const port = process.env.PORT || 3000;
 
   // Middleware
   app.use(cors(corsOptions));
@@ -19,7 +18,6 @@ export const createApp = (): Application => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Response transformation middleware (convert all JSON responses to snake_case)
   app.use(responseTransformMiddleware);
 
   // Passport

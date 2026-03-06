@@ -9,7 +9,7 @@ model User {
   //relation
   accessTokens  Token[]
   orders        Order[]
-  userOnRoles   UserOnRoles[]
+  userRoles     UserRole[]
   oAuthAccounts OAuthAccount[]
   shop          Shop?
   cart          Cart?

@@ -13,7 +13,7 @@ const router = Router();
 
 router.use('/users', userRoutes);
 router.use('/auth', authRoutes);
-router.use('/cart', cartRoutes);
+router.use('/carts', cartRoutes);
 router.use('/products', productRoutes);
 router.use('/permissions', permissionRoutes);
 router.use('/roles', roleRoutes);

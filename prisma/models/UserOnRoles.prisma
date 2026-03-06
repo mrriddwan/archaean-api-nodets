@@ -1,4 +1,4 @@
-model UserOnRoles {
+model UserRole {
  userId String @map("user_id")
  roleId String @map("role_id")
 
