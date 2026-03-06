@@ -6,9 +6,9 @@ const router = Router();
 
 router.use(authenticate);
 
-const { getAllUsers, getUserById } = new UserController();
+const userController = new UserController();
 
-router.get("/", getAllUsers);
-router.get("/:id", getUserById);
+router.get("/", userController.getAllUsers.bind(userController));
+router.get("/:id", userController.getUserById.bind(userController));
 
 export const userRoutes = router;

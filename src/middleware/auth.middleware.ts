@@ -60,6 +60,11 @@ export const authenticate = async (
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
+      omit: {
+        password: true,
+        created_at: true,
+        updated_at: true,
+      },
     });
 
     if (!user) {
@@ -72,6 +77,7 @@ export const authenticate = async (
 
     req.user = user;
     next();
+    
   } catch (error) {
     if (error instanceof AppError) {
       throw error;

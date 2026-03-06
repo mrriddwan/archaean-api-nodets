@@ -44,6 +44,6 @@ router.post("/google/tokens", googleTokens);
 // Refresh token endpoint
 router.use(authenticate).post("/refresh", authController.refresh.bind(authController));
 router.use(authenticate).post("/logout", authController.logout.bind(authController));
-router.use(authenticate).get("/me", authController.getMe.bind(authController));
+router.use(authenticate).get("/logged-in", authController.getMe.bind(authController));
 
 export const authRoutes = router;

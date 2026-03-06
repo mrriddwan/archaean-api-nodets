@@ -148,6 +148,7 @@ export class AuthController {
       };
       res.json(response);
     } catch (error) {
+      console.error("[AuthController] getMe error", error);
       next(error);
     }
   };
