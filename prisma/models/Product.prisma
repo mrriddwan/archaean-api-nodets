@@ -1,14 +1,14 @@
 model Product {
-  id          String   @id @default(ulid())
+  id          String            @id @default(ulid())
   name        String
   description String?
   price       Float
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
-  shopId      String   @map("shop_id")
-  shop        Shop     @relation(fields: [shopId], references: [id])
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime?         @updatedAt @map("updated_at")
+  shopId      String            @map("shop_id")
+  shop        Shop              @relation(fields: [shopId], references: [id])
   orders      ProductOnOrders[]
-  productOnCarts ProductOnCarts[]
+  cartItems   CartItem[]
 
   @@map("products")
 }

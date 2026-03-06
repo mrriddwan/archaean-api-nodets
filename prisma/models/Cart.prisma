@@ -4,7 +4,7 @@ model Cart {
   updatedAt DateTime?        @updatedAt @map("updated_at")
   userId    String           @unique @map("user_id")
   user      User             @relation(fields: [userId], references: [id])
-  products  ProductOnCarts[]
+  cartItems CartItem[]
 
   @@map("carts")
 }
