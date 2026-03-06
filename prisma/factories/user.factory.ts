@@ -8,7 +8,7 @@ export async function userFactory(
   return {
     email: faker.internet.email(),
     name: faker.person.fullName(),
-    password: await argon2.hash(faker.internet.password()),
+    password: await argon2.hash('password123'),
     ...overrides,
   };
 }

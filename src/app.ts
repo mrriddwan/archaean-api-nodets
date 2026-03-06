@@ -6,14 +6,16 @@ import { routes } from "./routes";
 import { errorHandler } from "./middleware/error.middlesware";
 import { responseTransformMiddleware } from "./middleware/response-transform.middleware";
 import "./lib/passport";
+import { corsOptions } from "./config/cors";
 
 export const createApp = (): Application => {
   const app = express();
   const port = process.env.PORT || 3000;
 
   // Middleware
+  app.use(cors(corsOptions));
   app.use(helmet());
-  app.use(cors());
+
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
