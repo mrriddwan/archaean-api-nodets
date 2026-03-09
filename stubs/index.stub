@@ -1,0 +1,5 @@
+export * from "./FEATURE_NAME_KEBAB.controller";
+export * from "./FEATURE_NAME_KEBAB.service";
+export * from "./FEATURE_NAME_KEBAB.repository";
+export * from "./FEATURE_NAME_KEBAB.routes";
+export * from "./FEATURE_NAME_KEBAB.schema";

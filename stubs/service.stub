@@ -1,0 +1,30 @@
+import { Prisma } from "generated/prisma/client";
+import { FEATURE_NAME_PASCALRepository } from "./FEATURE_NAME_KEBAB.repository";
+
+export class FEATURE_NAME_PASCALService {
+  private repository: FEATURE_NAME_PASCALRepository;
+
+  constructor() {
+    this.repository = new FEATURE_NAME_PASCALRepository();
+  }
+
+  async findAll() {
+    return this.repository.findAll();
+  }
+
+  async findById(id: string) {
+    return this.repository.findById(id);
+  }
+
+  async create(data: Prisma.FEATURE_NAME_PASCALCreateInput) {
+    return this.repository.create(data);
+  }
+
+  async update(id: string, data: Prisma.FEATURE_NAME_PASCALUpdateInput) {
+    return this.repository.update(id, data);
+  }
+
+  async delete(id: string) {
+    return this.repository.delete(id);
+  }
+}

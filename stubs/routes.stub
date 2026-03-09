@@ -1,0 +1,18 @@
+import { Router } from "express";
+import { FEATURE_NAME_PASCALController } from "./FEATURE_NAME_KEBAB.controller";
+import { validateRequest } from "@/middleware/validation.middleware";
+import { createFEATURE_NAME_PASCALSchema, updateFEATURE_NAME_PASCALSchema } from "./FEATURE_NAME_KEBAB.schema";
+import { authenticate } from "@/middleware/auth.middleware";
+
+const router = Router();
+const controller = new FEATURE_NAME_PASCALController();
+
+router.use(authenticate);
+
+router.get("/", controller.getAll.bind(controller));
+router.get("/:id", controller.getById.bind(controller));
+router.post("/", validateRequest(createFEATURE_NAME_PASCALSchema), controller.create.bind(controller));
+router.put("/:id", validateRequest(updateFEATURE_NAME_PASCALSchema), controller.update.bind(controller));
+router.delete("/:id", controller.delete.bind(controller));
+
+export const FEATURE_NAMERoutes = router;

@@ -1,0 +1,24 @@
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "generated/prisma/client";
+
+export class FEATURE_NAME_PASCALRepository {
+  async findAll() {
+    return prisma.FEATURE_NAME_CAMEL.findMany();
+  }
+
+  async findById(id: string) {
+    return prisma.FEATURE_NAME_CAMEL.findUnique({ where: { id } });
+  }
+
+  async create(data: Prisma.FEATURE_NAME_PASCALCreateInput) {
+    return prisma.FEATURE_NAME_CAMEL.create({ data });
+  }
+
+  async update(id: string, data: Prisma.FEATURE_NAME_PASCALUpdateInput) {
+    return prisma.FEATURE_NAME_CAMEL.update({ where: { id }, data });
+  }
+
+  async delete(id: string) {
+    return prisma.FEATURE_NAME_CAMEL.delete({ where: { id } });
+  }
+}

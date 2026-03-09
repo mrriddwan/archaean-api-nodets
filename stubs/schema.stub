@@ -1,0 +1,11 @@
+import z from "zod";
+
+export const createFEATURE_NAME_PASCALSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  // Add more fields as needed for your feature
+});
+
+export const updateFEATURE_NAME_PASCALSchema = createFEATURE_NAME_PASCALSchema.partial();
+
+export type CreateFEATURE_NAME_PASCALDto = z.infer<typeof createFEATURE_NAME_PASCALSchema>;
+export type UpdateFEATURE_NAME_PASCALDto = z.infer<typeof updateFEATURE_NAME_PASCALSchema>;
