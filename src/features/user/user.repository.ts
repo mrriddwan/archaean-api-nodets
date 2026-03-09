@@ -50,7 +50,7 @@ export class UserRepository {
     const user = await prisma.user.findUnique({
       where: { email },
       include: {
-        userOnRoles: true
+        userRoles: true
       },
       omit: {
         password: true,
@@ -63,7 +63,7 @@ export class UserRepository {
     const user = await prisma.user.findUnique({
       where: { email },
       include: {
-        userOnRoles: true
+        userRoles: true
       }
     });
     return user;

@@ -56,7 +56,15 @@ export class CartRepository {
       throw new Error("Cart not found");
     }
 
-    const cartItem = await prisma.cartItem.update({
+    const cartItem = await prisma.cartItem.findFirst({
+      where: { productId, cartId: cart.id },
+    });
+
+    if (!cartItem) {
+      throw new Error("Cart item not found");
+    }
+
+    await prisma.cartItem.update({
       where: { productId_cartId: { productId, cartId: cart.id } },
       data: { quantity: { decrement: 1 } },
     });
