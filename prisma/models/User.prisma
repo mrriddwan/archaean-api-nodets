@@ -10,6 +10,7 @@ model User {
   accessTokens  Token[]
   orders        Order[]
   userRoles     UserRole[]
+  notifications Notification[]
   oAuthAccounts OAuthAccount[]
   shop          Shop?
   cart          Cart?

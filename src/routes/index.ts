@@ -8,6 +8,7 @@ import { roleRoutes } from '@/features/role/role.routes';
 import { orderRoutes } from '@/features/order/order.routes';
 import { paymentRoutes } from '@/features/payment/payment.routes';
 import { shopRoutes } from '@/features/shop/shop.routes';
+import { notificationRoutes } from '@/features/notification/notification.routes';
 
 const router = Router();
 
@@ -20,5 +21,5 @@ router.use('/roles', roleRoutes);
 router.use('/orders', orderRoutes);
 router.use('/payments', paymentRoutes);
 router.use('/shops', shopRoutes);
-
+router.use('/notifications', notificationRoutes);
 export const routes = router;
